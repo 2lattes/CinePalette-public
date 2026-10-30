@@ -1,0 +1,7 @@
+/* Buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:48px;padding:13px 26px;border-radius:999px;border:none;cursor:pointer;font-family:var(--font-h);font-weight:600;font-size:16px;color:#fff;background:linear-gradient(135deg,#E11D48,#BE123C);box-shadow:0 0 28px var(--accent-glow),inset 0 1px 0 rgba(255,255,255,.25);transition:transform .15s var(--ease),box-shadow .15s}
+.btn:hover,.btn:focus-visible{transform:translateY(-2px);box-shadow:0 0 38px var(--accent-glow),inset 0 1px 0 rgba(255,255,255,.25)}
+.btn:focus-visible{outline:2px solid #fff;outline-offset:2px}
+.btn.ghost{background:var(--surface);border:1px solid var(--border);box-shadow:none;color:var(--fg);backdrop-filter:var(--blur);-webkit-backdrop-filter:var(--blur)}
+.btn-row{display:flex;gap:12px;justify-content:center;margin-top:22px;flex-wrap:wrap}
+.btn-row.start{justify-content:flex-start}

@@ -1,0 +1,17 @@
+/* Reset, page background, ambient blobs, film-grain overlay */
+*{margin:0;padding:0;box-sizing:border-box}
+/* The hidden attribute must win over component display rules (.pill, .btn-row, .end-replay…). */
+[hidden]{display:none !important}
+html{scroll-behavior:smooth}
+body{
+  font-family:var(--font-b);color:var(--fg);min-height:100vh;
+  background:linear-gradient(160deg,var(--bg-red) 0%,var(--bg-base) 45%,var(--bg-deep) 100%);
+  background-attachment:fixed;overflow-x:hidden;-webkit-font-smoothing:antialiased;
+}
+body::after{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.5;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3CfeComponentTransfer%3E%3CfeFuncA type='linear' slope='0.05'/%3E%3C/feComponentTransfer%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E")}
+.blob{position:fixed;border-radius:50%;filter:blur(90px);opacity:.4;pointer-events:none;z-index:0}
+.blob1{width:480px;height:480px;background:#6e1020;top:-140px;left:-110px;animation:drift 26s var(--ease) infinite alternate}
+.blob2{width:400px;height:400px;background:#3a0d4a;bottom:-120px;right:-90px;animation:drift 32s var(--ease) infinite alternate-reverse}
+@keyframes drift{from{transform:translate(0,0)}to{transform:translate(70px,50px)}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+@supports not (backdrop-filter: blur(1px)){.mode-card,.ans,.endcard,.pill,.toast{background:rgba(26,8,14,.92)!important}}

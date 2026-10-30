@@ -1,0 +1,32 @@
+/* App shell: wrap, header, pills, icon sizing, screen switching */
+.wrap{position:relative;z-index:1;max-width:960px;margin:0 auto;padding:24px 16px 48px}
+header{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px}
+.logo{font-family:var(--font-d);font-weight:400;font-size:26px;letter-spacing:2.5px;display:flex;align-items:center;gap:10px}
+.logo img{height:44px;width:auto;display:block;filter:drop-shadow(0 0 14px var(--accent-glow))}
+.pill{display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border-radius:999px;background:var(--surface);border:1px solid var(--border);font-size:13px;color:var(--muted);backdrop-filter:var(--blur);-webkit-backdrop-filter:var(--blur)}
+.pill b{color:var(--fg)}
+.icn{width:1.1em;height:1.1em;display:inline-block;vertical-align:-0.2em;flex:0 0 auto}
+.pill .icn{width:1.25em;height:1.25em}
+.mode-ico .icn{width:22px;height:22px}
+.btn .icn{width:1em;height:1em}
+.icn-gold{color:var(--gold)}
+.icn-good{color:var(--good)}
+.icn-red{color:#F43F5E}
+.icn-accent{color:var(--accent-2)}
+
+
+.screen{display:none}
+.screen.active{display:block;animation:enter .35s var(--ease)}
+@keyframes enter{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+/* Header logo doubles as a "back to home" button */
+.logo{background:none;border:0;padding:0;cursor:pointer;color:inherit;font-family:var(--font-d)}
+.logo:hover img,.logo:focus-visible img{filter:drop-shadow(0 0 20px var(--accent-glow))}
+.logo:focus-visible{outline:2px solid var(--accent-2);outline-offset:4px;border-radius:8px}
+
+/* The home is a complete programme, not a page that asks for a second scroll
+   on a laptop-height viewport. Wider displays retain the generous default
+   rhythm; this tighter score only activates when vertical room is scarce. */
+@media (min-width:769px) and (max-height:800px){
+  .wrap{padding-top:16px;padding-bottom:24px}
+  header{margin-bottom:14px}
+}

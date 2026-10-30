@@ -1,0 +1,101 @@
+/* The auditorium and the menu are separate steps. No scroll track remains in
+   the document, so returning to the first frame requires a page reload. */
+html.onboarding-locked,body.onboarding{overflow:hidden;overscroll-behavior:none}
+body.onboarding{height:100dvh}
+.onboard{display:none}
+body.onboarding .onboard{display:block;position:fixed;inset:0;z-index:2;touch-action:none}
+.ob-copy{position:fixed;inset:0;z-index:2;pointer-events:none}
+
+/* A direct exit remains available from the first step. */
+.ob-skip{
+  position:fixed;right:clamp(20px,4vw,48px);top:calc(20px + env(safe-area-inset-top));z-index:3;
+  color:var(--muted);font-size:13px;text-decoration:none;text-underline-offset:4px;
+  pointer-events:auto;opacity:.82;transition:opacity .15s var(--ease),color .15s var(--ease);
+}
+.ob-skip:hover,.ob-skip:focus-visible{color:var(--fg);opacity:1}
+.ob-skip:focus-visible{outline:2px solid var(--accent-2);outline-offset:5px;border-radius:4px}
+.onboard[data-step="principle"] .ob-skip,
+.onboard[data-step="leaving"] .ob-skip{display:none}
+
+.ob-controls{
+  position:fixed;left:16px;right:16px;bottom:calc(22px + env(safe-area-inset-bottom));
+  z-index:3;display:flex;flex-direction:column;align-items:center;gap:8px;
+}
+.ob-next{
+  min-height:48px;padding:10px 23px;border:1px solid var(--border-hi);border-radius:999px;
+  background:rgba(30,10,16,.88);color:var(--fg);font:600 15px var(--font-h);
+  box-shadow:0 10px 30px rgba(0,0,0,.4);cursor:pointer;
+  transition:background .18s var(--ease),border-color .18s var(--ease),opacity .18s var(--ease);
+}
+.ob-next:hover,.ob-next:focus-visible{background:var(--glass-red);border-color:var(--accent-2)}
+.ob-next:focus-visible{outline:2px solid var(--accent-2);outline-offset:3px}
+.ob-next:disabled{cursor:default;opacity:.65}
+.ob-gesture{color:var(--muted);font-size:12px;text-shadow:0 2px 12px #080103}
+.onboard[data-step="leaving"] .ob-controls{opacity:0;pointer-events:none}
+
+/* Hung off --screen-y, NOT centred in the window. Centring on the window put
+   the block 162px below the screen's middle on a 1440x900 and pushed the last
+   paragraph onto the lit seat band, where --muted measured 3.62:1 — under the
+   4.5:1 body text needs. Against the screen it measures 8.0:1, because the
+   screen is the darkest surface in the photograph. */
+.ob-block{
+  position:absolute;left:50%;top:calc(var(--screen-y) + clamp(18px, 3vh, 32px));
+  width:min(620px, 64vw);
+  transform:translate(-50%,-50%);
+  display:flex;flex-direction:column;align-items:center;gap:22px;
+  pointer-events:none;will-change:opacity;
+}
+.ob-text{display:flex;flex-direction:column;align-items:center;gap:14px}
+
+.ob-block h2{
+  font-family:var(--font-d);font-weight:400;
+  font-size:clamp(28px, 3vw, 46px);letter-spacing:3px;
+  text-shadow:0 2px 20px rgba(0,0,0,.9);
+}
+.ob-block p{
+  color:var(--muted);font-size:clamp(14px, 1.15vw, 18px);line-height:1.6;
+  max-width:44ch;text-align:center;text-wrap:balance;
+  text-shadow:0 1px 14px rgba(0,0,0,.9);
+}
+.ob-block p b{color:var(--fg);font-weight:600}
+
+/* The palette belongs to the heading and the paragraphs: one block, one
+   window, in and out together. It had its own act for a while — growing out of
+   this frame until it covered the cinema screen — and that is gone. */
+.strip-demo{
+  position:relative;width:100%;height:clamp(112px, 13vw, 190px);
+  border-radius:22px;overflow:hidden;
+  /* No coloured halo: hanging in the middle of a dark screen, a glow with no
+     offset reads as a sticker pasted onto the photograph. The palette is the
+     brightest thing in the room; it does not need help being seen. */
+  box-shadow:0 26px 70px rgba(0,0,0,.55);
+}
+.strip-demo img{width:100%;height:100%;object-fit:fill;display:block}
+
+/* Home is revealed by the last step and becomes interactive when it completes. */
+body.onboarding header,
+body.onboarding #scr-home{
+  opacity:var(--onboard-home,0);
+  transform:translateY(var(--onboard-home-shift,18px));
+  will-change:opacity,transform;
+}
+/* The generic screen entrance would override the step's opacity on load and
+   flash the home behind the auditorium. This screen has its own entrance. */
+#scr-home.active{animation:none}
+body.onboarding footer{visibility:hidden}
+
+.sr-only{
+  position:absolute;width:1px;height:1px;padding:0;margin:-1px;
+  overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0;
+}
+
+@media (max-width:768px){
+  /* Portrait crops the room much harder, so the projection takes nearly the
+     full width rather than the 64vw it gets on a wide screen. */
+  .ob-block{top:calc(var(--screen-y) + clamp(14px, 3vh, 24px));width:86vw;gap:18px}
+  .ob-block h2{font-size:30px;letter-spacing:2px}
+  .strip-demo{height:108px;border-radius:16px}
+  .ob-block p{font-size:14px;line-height:1.55}
+  .ob-skip{right:20px;font-size:12px}
+  .ob-controls{bottom:calc(18px + env(safe-area-inset-bottom))}
+}

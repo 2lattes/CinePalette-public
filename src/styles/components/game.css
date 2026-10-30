@@ -1,0 +1,119 @@
+/* Game screen: HUD, timer, board, answers, reveal */
+/* GAME */
+.hud{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:16px}
+.hud-left,.hud-right{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.lives{display:flex;gap:4px;font-size:15px}
+.life{transition:opacity .3s,transform .3s var(--ease)}
+.life.lost{opacity:.18;transform:scale(.8)}
+.streak-pill{background:rgba(244,197,66,.12);border-color:rgba(244,197,66,.3)}
+.streak-pill b{color:var(--gold)}
+.timerbar{height:8px;border-radius:99px;background:rgba(255,255,255,.09);overflow:visible;margin-bottom:20px;box-shadow:inset 0 1px 1px rgba(0,0,0,.3)}
+.timerbar i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,#F4C542,#E8A33D);transform-origin:left;transition:transform .1s linear,background .18s,box-shadow .18s}
+.timerbar.danger{background:rgba(225,29,72,.18);animation:timerAlarm .62s ease-in-out infinite alternate}
+.timerbar.danger i{background:linear-gradient(90deg,#FB7185,#E11D48);box-shadow:0 0 14px rgba(251,113,133,.9)}
+@keyframes timerAlarm{from{box-shadow:inset 0 1px 1px rgba(0,0,0,.3),0 0 0 rgba(251,113,133,0)}to{box-shadow:inset 0 1px 1px rgba(0,0,0,.3),0 0 0 4px rgba(251,113,133,.12),0 0 22px rgba(225,29,72,.72)}}
+
+.board{display:grid;grid-template-columns:1fr;gap:22px;align-items:stretch}
+.strip-card{position:relative;border-radius:var(--radius);overflow:hidden;border:1px solid var(--border-hi);box-shadow:0 18px 60px rgba(225,29,72,.28);background:var(--surface);height:230px;isolation:isolate}
+.strip-card img{width:100%;height:100%;object-fit:fill;display:block;transition:filter .18s ease}
+.strip-card::before,.strip-card::after{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;opacity:0}
+.strip-card::before{transform:translateX(-120%);clip-path:inset(0 round var(--radius))}
+.strip-card.answer-correct{border-color:rgba(110,231,183,.92);box-shadow:0 18px 60px rgba(16,185,129,.28),0 0 0 1px rgba(110,231,183,.45);animation:stripConfirm .7s var(--ease)}
+.strip-card.answer-correct img{filter:saturate(1.18) brightness(1.1)}
+.strip-card.answer-correct::before{background:linear-gradient(105deg,transparent 0 34%,rgba(235,255,246,.94) 45%,rgba(110,231,183,.86) 50%,transparent 61%);animation:paletteExposure .72s var(--ease)}
+.strip-card.answer-correct::after{background:linear-gradient(90deg,rgba(16,185,129,.26),transparent 55%);animation:resultWash .9s var(--ease)}
+.strip-card.answer-wrong{border-color:rgba(251,113,133,.9);box-shadow:0 18px 60px rgba(225,29,72,.34),0 0 0 1px rgba(251,113,133,.36);animation:stripReject .52s var(--ease)}
+.strip-card.answer-wrong img{filter:saturate(.48) brightness(.78)}
+.strip-card.answer-wrong::before{background:linear-gradient(105deg,transparent 0 37%,rgba(255,226,230,.86) 46%,rgba(244,63,94,.9) 51%,transparent 62%);animation:paletteExposure .58s var(--ease)}
+.strip-card.answer-wrong::after{background:linear-gradient(90deg,rgba(225,29,72,.42),transparent 62%);animation:resultWash .82s var(--ease)}
+
+/* ── Rack focus between two palettes ─────────────────────────────────────────
+   Swapping the <img> src was a cut: one field of colour replaced by another on
+   a single frame, with a hole in the middle if the file wasn't decoded yet.
+   A palette is a continuous thing, so it should change the way a lens does.
+
+   Two layers. #stripGhost holds the outgoing palette, frozen sharp on top while
+   the next one loads underneath, then pulls out of focus and leaves. #stripImg
+   arrives defocused and settles. Blur samples past an image's own edges, where
+   there is nothing, so a blurred layer would feather to the card's surface at
+   the border — both layers are scaled up while blurred to push that feathering
+   outside the card. The ghost leaves faster than the new palette lands: the two
+   overlap through the blurred middle, which is what makes it read as one move
+   rather than two.
+
+   Radii were picked by rendering the trough of the dissolve on real palettes.
+   At 16px the middle of the move collapses to a single smear — the palette
+   stops being a palette. At 10 and 12 it is plainly out of focus and still
+   legibly banded, which is what a lens actually does. The outgoing layer takes
+   the smaller radius: it is leaving, it never needs to defocus all the way. */
+.strip-card .strip-ghost{
+  position:absolute;inset:0;z-index:2;pointer-events:none;
+  opacity:0;filter:saturate(1) brightness(1) blur(10px);transform:scale(1.08);
+  transition:opacity .34s cubic-bezier(.4,0,.2,1),
+             filter .34s cubic-bezier(.4,0,.2,1),
+             transform .34s cubic-bezier(.4,0,.2,1);
+}
+/* The frozen frame. No transition: it has to land exactly where the outgoing
+   palette already was, on the frame it is shown. */
+/* Every state below names saturate, brightness AND blur, in that order, even
+   where the value is the identity. CSS only interpolates two filter lists when
+   they hold the same functions in the same order: a tinted hold of
+   `saturate() brightness()` leaving towards a plain `blur()` is a mismatch, and
+   the browser swaps discretely instead — measured live, the outgoing palette
+   jumped to full blur on a single frame. Since every round ends in a verdict,
+   that hit every swap in the game. Spelled out, the tint dissolves away as the
+   layer defocuses, which is also the better picture. */
+.strip-card .strip-ghost.hold{
+  opacity:1;filter:saturate(1) brightness(1) blur(0);transform:scale(1);transition:none;
+}
+.strip-card .strip-ghost.hold.tint-correct{filter:saturate(1.18) brightness(1.1) blur(0)}
+.strip-card .strip-ghost.hold.tint-wrong{filter:saturate(.48) brightness(.78) blur(0)}
+
+.strip-card.swapping #stripImg{
+  transition:filter .46s cubic-bezier(.22,.61,.36,1),
+             transform .46s cubic-bezier(.22,.61,.36,1);
+}
+/* Must come after .swapping to win the tie and suppress its transition. */
+.strip-card.swap-start #stripImg{filter:blur(12px);transform:scale(1.08);transition:none}
+
+@keyframes paletteExposure{0%{opacity:0;transform:translateX(-120%)}20%{opacity:1}72%{opacity:.92}100%{opacity:0;transform:translateX(120%)}}
+@keyframes resultWash{0%{opacity:0}22%{opacity:1}100%{opacity:.28}}
+@keyframes stripConfirm{0%{transform:scale(1)}38%{transform:scale(1.012)}100%{transform:scale(1)}}
+@keyframes stripReject{0%,100%{transform:translateX(0)}28%{transform:translateX(-9px)}55%{transform:translateX(7px)}78%{transform:translateX(-3px)}}
+.timeline-lbl{position:absolute;z-index:3;bottom:8px;font-size:11px;letter-spacing:.6px;color:rgba(255,255,255,.78);background:rgba(13,3,6,.5);padding:3px 9px;border-radius:999px;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);pointer-events:none}
+.timeline-lbl.start{left:10px}
+.timeline-lbl.end{right:10px}
+.qside{display:flex;flex-direction:column;justify-content:center;gap:12px}
+.qtitle{font-family:var(--font-h);font-weight:600;font-size:clamp(19px,3vw,24px);margin-bottom:6px}
+.qtitle small{display:block;font-family:var(--font-b);font-weight:400;color:var(--muted);font-size:14px;margin-top:4px}
+.answers{display:flex;flex-direction:column;gap:10px}
+.ans{position:relative;text-align:left;padding:15px 18px;min-height:52px;border-radius:14px;background:var(--surface);border:1px solid var(--border);color:var(--fg);font-family:var(--font-b);font-size:16px;cursor:pointer;transition:border-color .15s,background .15s,transform .15s var(--ease);backdrop-filter:var(--blur);-webkit-backdrop-filter:var(--blur)}
+.ans:hover:not(:disabled),.ans:focus-visible{border-color:var(--accent-2);background:var(--glass-red);transform:translateX(4px)}
+.ans:focus-visible{outline:2px solid var(--accent-2);outline-offset:2px}
+.ans:disabled{cursor:default}
+.ans .key{display:inline-flex;width:24px;height:24px;border-radius:7px;align-items:center;justify-content:center;font-size:12px;font-weight:700;background:rgba(225,29,72,.25);border:1px solid var(--border);margin-right:10px;color:var(--accent-2)}
+.ans.correct{background:rgba(52,211,153,.22);border-color:rgba(110,231,183,.82);box-shadow:0 8px 24px rgba(16,185,129,.16);animation:answerConfirm .42s var(--ease)}
+.ans.correct .key{background:rgba(52,211,153,.3);color:#6EE7B7}
+.ans.wrong{background:rgba(244,63,94,.2);border-color:rgba(251,113,133,.8);animation:answerReject .38s var(--ease)}
+@keyframes answerConfirm{0%{transform:scale(1)}45%{transform:scale(1.018)}100%{transform:scale(1)}}
+@keyframes answerReject{0%,100%{transform:translateX(0)}32%{transform:translateX(-7px)}68%{transform:translateX(5px)}}
+.ans.dim{opacity:.4}
+
+.reveal{margin-top:6px;padding:16px 18px;border-radius:14px;background:var(--surface);border:1px solid var(--border);display:none}
+.reveal.show{display:block;animation:enter .3s var(--ease)}
+.reveal .verdict{font-family:var(--font-h);font-weight:600;font-size:17px;margin-bottom:4px}
+.reveal .verdict.ok{color:var(--good)}
+.reveal .verdict.ko{color:#FB7185}
+.reveal p{color:var(--muted);font-size:14px;line-height:1.5}
+.reveal .pts{color:var(--gold);font-weight:700}
+.score-pill{position:relative;overflow:visible}
+.score-pill.score-hit{animation:scorePillFlash .68s var(--ease)}
+.score-pop{display:inline-block;animation:scorePop .68s var(--ease)}
+.score-delta{position:absolute;right:7px;top:-7px;color:#FFE29A;font-weight:800;font-variant-numeric:tabular-nums;opacity:0;pointer-events:none;text-shadow:0 2px 12px rgba(244,197,66,.75)}
+.score-delta.show{animation:scoreGain .78s var(--ease)}
+@keyframes scorePop{0%{transform:scale(1)}32%{transform:scale(1.42);color:#FFE29A;text-shadow:0 0 16px rgba(244,197,66,.7)}100%{transform:scale(1)}}
+@keyframes scorePillFlash{0%,100%{background:var(--surface);border-color:var(--border)}35%{background:rgba(244,197,66,.24);border-color:rgba(244,197,66,.7);box-shadow:0 0 22px rgba(244,197,66,.18)}}
+@keyframes scoreGain{0%{opacity:0;transform:translateY(7px) scale(.85)}24%{opacity:1;transform:translateY(0) scale(1.08)}100%{opacity:0;transform:translateY(-30px) scale(1)}}
+
+/* Difficulty badge in the HUD */
+.level-pill{text-transform:uppercase;letter-spacing:.6px;font-size:11.5px;font-weight:700;color:var(--accent-2);border-color:var(--border-hi)}

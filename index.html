@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>CinéPalette · Devine le film par ses couleurs</title>
+<link rel="preload" href="/src/assets/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/src/assets/fonts/bebas-neue-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="icon" href="brand-assets/favicon/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="brand-assets/favicon/favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="brand-assets/favicon/favicon-16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="brand-assets/favicon/apple-touch-icon-180.png">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#150408">
+<meta name="description" content="CinéPalette, un jeu où tu devines le film à partir de sa palette de couleurs.">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+</head>
+<body>
+<div class="blob blob1"></div><div class="blob blob2"></div>
+<div class="hall" id="hall" aria-hidden="true">
+  <div class="hall-world">
+    <img class="hall-layer" data-depth="10.183" data-src="00_fond.webp" alt="" fetchpriority="high" decoding="async">
+    <span class="hall-layer hall-screen" data-depth="10.183"><span class="hall-flare" aria-hidden="true"></span><span class="hall-projection"><img src="src/assets/logo-980.webp" srcset="src/assets/logo-400.webp 400w, src/assets/logo-980.webp 980w" sizes="min(max(30vw, 53.75vh), 76vw)" width="980" height="280" alt="CinéPalette" decoding="async"><p class="hall-tagline">Le grand écran, résumé en couleurs.</p><span class="hall-beam" aria-hidden="true"><svg viewBox="0 0 24 32" fill="none" focusable="false"><path d="M12 3v25M5 21l7 7 7-7" stroke="currentColor" stroke-width="1.35" stroke-linecap="round" stroke-linejoin="round"/></svg></span></span></span>
+    <img class="hall-layer" data-depth="6.365" data-src="01_rangee.webp" alt="" decoding="async">
+    <img class="hall-layer" data-depth="5.595" data-src="02_rangee.webp" alt="" decoding="async">
+    <img class="hall-layer" data-depth="4.805" data-src="03_rangee.webp" alt="" decoding="async">
+    <img class="hall-layer" data-depth="4.031" data-src="04_rangee.webp" alt="" decoding="async">
+    <img class="hall-layer" data-depth="3.303" data-src="05_rangee.webp" alt="" decoding="async">
+    <img class="hall-layer" data-depth="2.618" data-src="06_rangee.webp" alt="" decoding="async">
+    <img class="hall-layer" data-depth="1.843" data-src="07_rangee.webp" alt="" decoding="async">
+    <img class="hall-layer" data-depth="1.0" data-src="08_rangee.webp" alt="" decoding="async">
+  </div>
+  <div class="hall-scrim"></div>
+</div>
+<div class="wrap">
+<!-- THE INTRO. Each short gesture advances one step; the home replaces it. -->
+<div class="onboard" id="onboard">
+  <p class="sr-only">CinéPalette — le grand écran, résumé en couleurs.</p>
+  <div class="ob-copy">
+    <div class="ob-block">
+        <h2>Le principe</h2>
+        <div class="strip-demo"><img src="images/la-la-land.webp" alt="Bande de couleurs d'un film, du début à la fin"><span class="timeline-lbl start">DÉBUT</span><span class="timeline-lbl end">FIN</span></div>
+        <div class="ob-text">
+          <p>Cette bande, c'est <b>un film entier résumé en couleurs</b> : chaque trait vertical est la couleur moyenne d'une image, du premier au dernier plan.</p>
+          <p>À toi de deviner de quel film elle vient, <b>rien qu'à ses couleurs</b>.</p>
+        </div>
+    </div>
+  </div>
+  <a class="ob-skip" href="#scr-home">Passer au menu</a>
+  <div class="ob-controls">
+    <button class="ob-next" type="button" data-home-label="Entrer dans la séance">Découvrir le principe</button>
+    <span class="ob-gesture">ou glisser vers le haut</span>
+  </div>
+</div>
+
+
+<header>
+  <button type="button" class="logo" data-action="quit" aria-label="Retour à l'accueil"><img src="src/assets/logo-400.webp" srcset="src/assets/logo-400.webp 400w, src/assets/logo-980.webp 980w" sizes="(max-width: 768px) 105px, 154px" width="400" height="115" alt="CinéPalette" decoding="async"></button>
+  <div class="header-right">
+    <button class="pill home-btn" data-action="quit" aria-label="Retour à l'accueil" title="Accueil"><svg class="icn" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M219.31,108.68l-80-80a16,16,0,0,0-22.62,0l-80,80A15.87,15.87,0,0,0,32,120v96a8,8,0,0,0,8,8h64a8,8,0,0,0,8-8V160h32v56a8,8,0,0,0,8,8h64a8,8,0,0,0,8-8V120A15.87,15.87,0,0,0,219.31,108.68ZM208,208H160V152a8,8,0,0,0-8-8H104a8,8,0,0,0-8,8v56H48V120l80-80,80,80Z"/></svg></button>
+    <button class="pill settings-btn" type="button" data-action="open-settings" aria-label="Réglages" title="Réglages"><svg class="icn" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><rect x="40" y="72" width="52" height="16" rx="8"/><rect x="132" y="72" width="84" height="16" rx="8"/><circle cx="112" cy="80" r="18"/><rect x="40" y="168" width="84" height="16" rx="8"/><rect x="164" y="168" width="52" height="16" rx="8"/><circle cx="144" cy="176" r="18"/></svg></button>
+    <span class="pill" id="bestPill"><svg class="icn icn-gold" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M232,64H208V48a8,8,0,0,0-8-8H56a8,8,0,0,0-8,8V64H24A16,16,0,0,0,8,80V96a40,40,0,0,0,40,40h3.65A80.13,80.13,0,0,0,120,191.61V216H96a8,8,0,0,0,0,16h64a8,8,0,0,0,0-16H136V191.58c31.94-3.23,58.44-25.64,68.08-55.58H208a40,40,0,0,0,40-40V80A16,16,0,0,0,232,64ZM48,120A24,24,0,0,1,24,96V80H48v32q0,4,.39,8Zm144-8.9c0,35.52-29,64.64-64,64.9a64,64,0,0,1-64-64V56H192ZM232,96a24,24,0,0,1-24,24h-.5a81.81,81.81,0,0,0,.5-8.9V80h24Z"/></svg> Record : <b id="bestScore">0</b></span>
+  </div>
+</header>
+
+<!-- HOME -->
+<section class="screen active" id="scr-home">
+  <div class="hero">
+    <h1>Devine le film<br><span>par ses couleurs</span></h1>
+    <p>Chaque affiche empile la couleur moyenne de chaque image du film, du début à la fin. Sauras-tu reconnaître le film uniquement à sa palette&nbsp;?</p>
+  </div>
+  <div class="modes">
+    <button class="mode-card" data-action="start-classic">
+      <span class="mode-ico"><svg class="icn icn-accent" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M216,104H102.09L210,75.51a8,8,0,0,0,5.68-9.84l-8.16-30a15.93,15.93,0,0,0-19.42-11.13L35.81,64.74a15.75,15.75,0,0,0-9.7,7.4,15.51,15.51,0,0,0-1.55,12L32,111.56c0,.14,0,.29,0,.44v88a16,16,0,0,0,16,16H208a16,16,0,0,0,16-16V112A8,8,0,0,0,216,104ZM192.16,40l6,22.07-22.62,6L147.42,51.83Zm-66.69,17.6,28.12,16.24-36.94,9.75L88.53,67.37Zm-79.4,44.62-6-22.08,26.5-7L94.69,89.4ZM208,200H48V120H208v80Z"/></svg></span>
+      <span class="mode-title">Partie rapide</span>
+      <span class="mode-desc">Lancez une partie à 10 manches et 3 vies. Avec bonus de rapidité et multiplicateur de série.</span>
+    </button>
+    <button class="mode-card" data-action="start-daily">
+      <span class="badge-new" id="dailyBadge">1 / JOUR</span>
+      <span class="mode-ico"><svg class="icn icn-gold" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M208,32H184V24a8,8,0,0,0-16,0v8H88V24a8,8,0,0,0-16,0v8H48A16,16,0,0,0,32,48V208a16,16,0,0,0,16,16H208a16,16,0,0,0,16-16V48A16,16,0,0,0,208,32ZM72,48v8a8,8,0,0,0,16,0V48h80v8a8,8,0,0,0,16,0V48h24V80H48V48ZM208,208H48V96H208V208Zm-68-76a12,12,0,1,1-12-12A12,12,0,0,1,140,132Zm44,0a12,12,0,1,1-12-12A12,12,0,0,1,184,132ZM96,172a12,12,0,1,1-12-12A12,12,0,0,1,96,172Zm44,0a12,12,0,1,1-12-12A12,12,0,0,1,140,172Zm44,0a12,12,0,1,1-12-12A12,12,0,0,1,184,172Z"/></svg></span>
+      <span class="mode-title">Palette du jour</span>
+      <span class="mode-desc">Le même film pour tout le monde, une seule chance par jour. Partage ton résultat et fais grandir ta série quotidienne.</span>
+    </button>
+  </div>
+  <section class="programme" aria-labelledby="programmeTitle">
+    <div class="programme-head">
+      <h2 id="programmeTitle">Au programme</h2>
+      <p>Trois collections, jouables comme une partie classique. D’autres suivront.</p>
+    </div>
+    <ul class="seances">
+      <li>
+        <button class="seance" data-action="start-classic" data-collection="a24" aria-label="Jouer la collection A24, 77 films">
+          <span class="seance-marquee">
+            <span class="seance-palettes" aria-hidden="true"><img src="images/midsommar.webp" alt=""><img src="images/moonlight.webp" alt=""><img src="images/the-witch.webp" alt=""></span>
+            <span class="seance-logo seance-title" aria-hidden="true">A24</span>
+          </span>
+          <span class="seance-meta"><span class="seance-count">77 films</span><span class="seance-best">Record <b id="best-a24">0</b></span></span>
+        </button>
+      </li>
+      <li>
+        <button class="seance" data-action="start-classic" data-collection="marvel" aria-label="Jouer la collection Marvel, 73 films">
+          <span class="seance-marquee">
+            <span class="seance-palettes" aria-hidden="true"><img src="images/iron-man.webp" alt=""><img src="images/guardians-of-the-galaxy-vol-2.webp" alt=""><img src="images/avengers-infinity-war.webp" alt=""></span>
+            <span class="seance-logo seance-title" aria-hidden="true">Marvel</span>
+          </span>
+          <span class="seance-meta"><span class="seance-count">73 films</span><span class="seance-best">Record <b id="best-marvel">0</b></span></span>
+        </button>
+      </li>
+      <li>
+        <button class="seance" data-action="start-classic" data-collection="star-wars" aria-label="Jouer la collection Star Wars, 11 films">
+          <span class="seance-marquee">
+            <span class="seance-palettes" aria-hidden="true"><img src="images/star-wars-episode-iv-a-new-hope.webp" alt=""><img src="images/star-wars-episode-v-the-empire-strikes-back.webp" alt=""><img src="images/rogue-one.webp" alt=""></span>
+            <span class="seance-logo seance-title" aria-hidden="true">Star Wars</span>
+          </span>
+          <span class="seance-meta"><span class="seance-count">11 films</span><span class="seance-best">Record <b id="best-star-wars">0</b></span></span>
+        </button>
+      </li>
+    </ul>
+  </section>
+  <div class="stats-row">
+    <span class="pill"><svg class="icn" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M216,40H40A16,16,0,0,0,24,56V200a16,16,0,0,0,16,16H216a16,16,0,0,0,16-16V56A16,16,0,0,0,216,40ZM40,88h80v80H40Zm96-16V56h32V72Zm-16,0H88V56h32Zm0,112v16H88V184Zm16,0h32v16H136Zm0-16V88h80v80Zm80-96H184V56h32ZM72,56V72H40V56ZM40,184H72v16H40Zm176,16H184V184h32v16Z"/></svg> <b id="statFilms">334</b>&nbsp;<span id="statFilmsLabel">films</span></span>
+    <span class="pill"><svg class="icn icn-gold" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M183.89,153.34a57.6,57.6,0,0,1-46.56,46.55A8.75,8.75,0,0,1,136,200a8,8,0,0,1-1.32-15.89c16.57-2.79,30.63-16.85,33.44-33.45a8,8,0,0,1,15.78,2.68ZM216,144a88,88,0,0,1-176,0c0-27.92,11-56.47,32.66-84.85a8,8,0,0,1,11.93-.89l24.12,23.41,22-60.41a8,8,0,0,1,12.63-3.41C165.21,36,216,84.55,216,144Zm-16,0c0-46.09-35.79-85.92-58.21-106.33L119.52,98.74a8,8,0,0,1-13.09,3L80.06,76.16C64.09,99.21,56,122,56,144a72,72,0,0,0,144,0Z"/></svg> Série quotidienne : <b id="dailyStreak">0</b></span>
+    <span class="pill"><svg class="icn icn-good" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M173.66,98.34a8,8,0,0,1,0,11.32l-56,56a8,8,0,0,1-11.32,0l-24-24a8,8,0,0,1,11.32-11.32L112,148.69l50.34-50.35A8,8,0,0,1,173.66,98.34ZM232,128A104,104,0,1,1,128,24,104.11,104.11,0,0,1,232,128Zm-16,0a88,88,0,1,0-88,88A88.1,88.1,0,0,0,216,128Z"/></svg> Parties jouées : <b id="statGames">0</b></span>
+  </div>
+</section>
+
+<!-- COLLECTION SCREEN -->
+
+<!-- GAME -->
+<section class="screen" id="scr-game">
+  <div class="hud">
+    <div class="hud-left">
+      <span class="pill" id="roundPill">Manche <b>1</b>/10</span>
+      <span class="pill collection-pill" id="collectionPill" hidden>A24</span>
+      <span class="pill level-pill" id="levelPill" hidden></span>
+      <span class="pill lives" id="livesBox"></span>
+    </div>
+    <div class="hud-right">
+      <span class="pill streak-pill"><svg class="icn icn-gold" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M183.89,153.34a57.6,57.6,0,0,1-46.56,46.55A8.75,8.75,0,0,1,136,200a8,8,0,0,1-1.32-15.89c16.57-2.79,30.63-16.85,33.44-33.45a8,8,0,0,1,15.78,2.68ZM216,144a88,88,0,0,1-176,0c0-27.92,11-56.47,32.66-84.85a8,8,0,0,1,11.93-.89l24.12,23.41,22-60.41a8,8,0,0,1,12.63-3.41C165.21,36,216,84.55,216,144Zm-16,0c0-46.09-35.79-85.92-58.21-106.33L119.52,98.74a8,8,0,0,1-13.09,3L80.06,76.16C64.09,99.21,56,122,56,144a72,72,0,0,0,144,0Z"/></svg> <b id="streakVal">0</b></span>
+      <span class="pill score-pill" id="scorePill">Score <b id="scoreVal">0</b><span class="score-delta" id="scoreDelta" aria-hidden="true"></span></span>
+    </div>
+  </div>
+  <div class="timerbar" id="timerbar" role="progressbar" aria-label="Temps restant" aria-valuemin="0" aria-valuemax="20" aria-valuenow="20"><i id="timerfill"></i></div>
+  <div class="board">
+    <div class="strip-card" id="stripCard"><img id="stripImg" src="images/la-la-land.webp" alt="Palette de couleurs du film à deviner, du début (gauche) à la fin (droite)"><img class="strip-ghost" id="stripGhost" src="images/la-la-land.webp" alt="" aria-hidden="true"><span class="timeline-lbl start">DÉBUT</span><span class="timeline-lbl end">FIN</span></div>
+    <div class="qside">
+      <div class="qtitle">Quel film se cache derrière ces couleurs&nbsp;?
+        <small id="qhint">Réponds vite : le bonus de temps fond à chaque seconde.</small>
+      </div>
+      <div class="answers" id="answers"></div>
+      <div class="reveal" id="reveal" aria-live="polite" aria-atomic="true">
+        <div class="verdict" id="verdict"></div>
+        <p id="revealTxt"></p>
+      </div>
+      <div class="btn-row start" id="nextRow" hidden>
+        <button class="btn" id="nextBtn" data-action="next-round">Manche suivante <svg class="icn" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M221.66,133.66l-72,72a8,8,0,0,1-11.32-11.32L196.69,136H40a8,8,0,0,1,0-16H196.69L138.34,61.66a8,8,0,0,1,11.32-11.32l72,72A8,8,0,0,1,221.66,133.66Z"/></svg></button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- END -->
+<section class="screen" id="scr-end">
+  <div class="endcard">
+    <h2 id="endTitle">Partie terminée</h2>
+    <div class="bigscore" id="endScore">0</div>
+    <p class="endsub" id="endSub"></p>
+    <p class="end-rank" id="endRank"></p>
+    <div class="endstats">
+      <span class="pill"><svg class="icn icn-good" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M173.66,98.34a8,8,0,0,1,0,11.32l-56,56a8,8,0,0,1-11.32,0l-24-24a8,8,0,0,1,11.32-11.32L112,148.69l50.34-50.35A8,8,0,0,1,173.66,98.34ZM232,128A104,104,0,1,1,128,24,104.11,104.11,0,0,1,232,128Zm-16,0a88,88,0,1,0-88,88A88.1,88.1,0,0,0,216,128Z"/></svg> <b id="endGood">0</b> bonnes réponses</span>
+      <span class="pill"><svg class="icn icn-gold" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M183.89,153.34a57.6,57.6,0,0,1-46.56,46.55A8.75,8.75,0,0,1,136,200a8,8,0,0,1-1.32-15.89c16.57-2.79,30.63-16.85,33.44-33.45a8,8,0,0,1,15.78,2.68ZM216,144a88,88,0,0,1-176,0c0-27.92,11-56.47,32.66-84.85a8,8,0,0,1,11.93-.89l24.12,23.41,22-60.41a8,8,0,0,1,12.63-3.41C165.21,36,216,84.55,216,144Zm-16,0c0-46.09-35.79-85.92-58.21-106.33L119.52,98.74a8,8,0,0,1-13.09,3L80.06,76.16C64.09,99.21,56,122,56,144a72,72,0,0,0,144,0Z"/></svg> <span id="endStreakLabel">Meilleure série :</span> <b id="endStreak">0</b></span>
+    </div>
+        <div class="end-replay" id="endReplay">
+      <span class="end-replay-label">Rejouer en</span>
+      <div class="end-levels" role="group" aria-label="Rejouer avec une autre difficulté">
+        <button class="end-level" data-action="start-classic" data-collection="resume" data-level="easy" aria-pressed="false">Facile</button>
+        <button class="end-level" data-action="start-classic" data-collection="resume" data-level="medium" aria-pressed="false">Moyen</button>
+        <button class="end-level" data-action="start-classic" data-collection="resume" data-level="hard" aria-pressed="false">Difficile</button>
+      </div>
+      <button class="end-relaxed" id="endRelaxed" type="button" data-action="toggle-relaxed" aria-pressed="false"><span id="endRelaxedState">Chrono actif · bonus de rapidité</span></button>
+    </div>
+    <div class="sharebox" id="shareBox" hidden></div>
+    <div class="btn-row">
+      <button class="btn" id="replayBtn" data-action="start-classic" data-collection="resume">Rejouer</button>
+      <button class="btn ghost" id="shareBtn" data-action="copy-share" hidden>Partager le résultat</button>
+      <button class="btn ghost" data-action="go-home">Accueil</button>
+    </div>
+  </div>
+</section>
+
+<footer><nav class="lang" aria-label="Langue"><a href="index.html" aria-current="page" class="active">Français</a><span aria-hidden="true"> · </span><a href="en.html">English</a></nav><div class="madein">Made in Marseille</div></footer>
+</div>
+<dialog class="settings" id="settingsDialog" aria-labelledby="settingsTitle">
+  <form method="dialog" class="settings-form">
+    <div class="settings-head">
+      <h2 id="settingsTitle">Réglages</h2>
+      <button class="settings-close" value="close" aria-label="Fermer"><svg class="icn" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M205.66,194.34a8,8,0,0,1-11.32,11.32L128,139.31,61.66,205.66a8,8,0,0,1-11.32-11.32L116.69,128,50.34,61.66A8,8,0,0,1,61.66,50.34L128,116.69l66.34-66.35a8,8,0,0,1,11.32,11.32L139.31,128Z"/></svg></button>
+    </div>
+    <fieldset class="settings-group">
+      <legend>Difficulté</legend>
+      <p class="settings-note">S’applique à la prochaine partie.</p>
+      <div class="settings-levels">
+          <label class="settings-level"><input type="radio" name="level" value="easy" checked><span class="sl-name">Facile</span><span class="sl-mark" aria-hidden="true"></span><span class="sl-sub">3 choix · palettes distinctes</span></label>
+          <label class="settings-level"><input type="radio" name="level" value="medium"><span class="sl-name">Moyen</span><span class="sl-mark" aria-hidden="true"></span><span class="sl-sub">3 choix · difficulté progressive</span></label>
+          <label class="settings-level"><input type="radio" name="level" value="hard"><span class="sl-name">Difficile</span><span class="sl-mark" aria-hidden="true"></span><span class="sl-sub">4 choix · palettes jumelles</span></label>
+      </div>
+    </fieldset>
+    <fieldset class="settings-group">
+      <legend>Chrono</legend>
+      <label class="settings-switch">
+        <input type="checkbox" id="relaxedInput">
+        <b>Mode détente</b>
+        <span class="ss-track" aria-hidden="true"><i></i></span>
+        <small id="relaxedState">Chrono actif · bonus de rapidité</small>
+      </label>
+    </fieldset>
+    <button type="button" class="settings-replay" data-action="replay-intro">Revoir l’intro</button>
+  </form>
+</dialog>
+<div class="toast" id="toast" role="status"></div>
+
+<script type="module" src="/src/app.js"></script>
+</body>
+</html>

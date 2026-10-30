@@ -1,0 +1,18 @@
+# En-têtes de sécurité du site, appliqués par LiteSpeed chez Hostinger.
+# Vite copie public/ tel quel dans dist/, qui est publié dans public_html.
+# C'est la seule source de ces en-têtes (plus de Vercel).
+<IfModule mod_headers.c>
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+  Header always set Permissions-Policy "camera=(), microphone=(), geolocation=()"
+  Header always set X-Frame-Options "DENY"
+  Header always set Strict-Transport-Security "max-age=31536000"
+  Header always set Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self'; font-src 'self'; img-src 'self' data:; connect-src 'self'; manifest-src 'self'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; object-src 'none'; upgrade-insecure-requests"
+</IfModule>
+
+# Palettes et icônes : fichiers stables, mis en cache une semaine.
+<IfModule mod_headers.c>
+  <FilesMatch "\.(webp|png|ico)$">
+    Header set Cache-Control "public, max-age=604800, stale-while-revalidate=86400"
+  </FilesMatch>
+</IfModule>

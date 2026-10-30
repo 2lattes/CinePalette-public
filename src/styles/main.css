@@ -1,0 +1,15 @@
+/* Import order mirrors the original stylesheet to keep the cascade identical. */
+@import './tokens.css';
+@import './base.css';
+@import './layout.css';
+@import './components/hall.css';
+@import './components/home.css';
+@import './components/collection.css';
+@import './components/settings.css';
+@import './components/onboarding.css';
+@import './components/game.css';
+@import './components/buttons.css';
+@import './components/end.css';
+@import './components/toast.css';
+@import './chrome.css';
+@import './responsive.css';

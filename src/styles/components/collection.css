@@ -1,0 +1,62 @@
+/* Curated collections use an editorial "screening" treatment, not another game card. */
+
+/* ── Home: the programme ───────────────────────────────────────────────────
+   Each collection is a marquee: its own films' palettes as the backdrop, the
+   collection's own signage on top. The two identity systems of the product,
+   stacked — the colour is the game, the logo says whose colour it is. */
+.programme{margin:30px 0 0;padding-top:22px;border-top:1px solid var(--border)}
+.programme-head{display:flex;align-items:baseline;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:15px}
+.programme-head h2{font-family:var(--font-d);font-weight:400;font-size:28px;letter-spacing:1.6px;line-height:1}
+.programme-head p{color:var(--muted);font-size:13px;line-height:1.4}
+
+.seances{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px;list-style:none;margin:0;padding:0}
+
+.seance{
+  display:flex;flex-direction:column;width:100%;padding:0;overflow:hidden;
+  background:var(--surface);border:1px solid var(--border);border-radius:14px;
+  color:var(--fg);font-family:var(--font-b);text-align:left;cursor:pointer;
+  transition:transform .18s var(--ease),border-color .18s ease,box-shadow .18s ease;
+}
+.seance:hover,.seance:focus-visible{transform:translateY(-3px);border-color:var(--border-hi);box-shadow:0 12px 34px rgba(225,29,72,.22)}
+.seance:active{transform:translateY(-1px) scale(.985)}
+.seance:focus-visible{outline:2px solid var(--accent-2);outline-offset:2px}
+
+.seance-marquee{position:relative;display:grid;place-items:center;aspect-ratio:16/7;overflow:hidden;background:#0a0205}
+.seance-palettes{position:absolute;inset:0;display:grid;grid-template-columns:repeat(3,1fr);gap:2px}
+/* fill, not cover: a palette is a 1px-high strip, and cover would blow that one
+   row up to the cell's height and keep only a handful of columns. */
+.seance-palettes img{
+  width:100%;height:100%;object-fit:fill;display:block;opacity:.5;
+  transition:opacity .22s ease,transform .28s var(--ease);
+}
+/* Scrim: the logo needs a quiet ground, the palettes need to stay readable. */
+.seance-marquee::after{content:"";position:absolute;inset:0;background:radial-gradient(ellipse at center,rgba(10,2,5,.82) 0%,rgba(10,2,5,.58) 55%,rgba(10,2,5,.38) 100%)}
+.seance:hover .seance-palettes img,.seance:focus-visible .seance-palettes img{opacity:.72;transform:scale(1.05)}
+
+.seance-logo{position:relative;z-index:1;width:auto;display:block;filter:drop-shadow(0 2px 10px rgba(0,0,0,.7))}
+/* Collection names set in the display face: the public repository ships no
+   third-party logos. */
+.seance-title{font-family:var(--font-d);font-size:38px;line-height:1;letter-spacing:.04em;color:#fff}
+
+.seance-meta{display:flex;align-items:baseline;justify-content:space-between;gap:10px;padding:11px 13px 12px}
+.seance-count{font-size:13px;font-weight:600}
+.seance-best{font-size:12px;color:var(--muted)}
+.seance-best b{color:var(--gold);font-weight:700}
+
+/* The HUD badge naming the active collection. */
+.collection-pill{color:var(--gold);border-color:rgba(244,197,66,.34);background:rgba(244,197,66,.1);font-weight:700}
+
+@media (min-width:769px) and (max-height:800px){
+  .programme{margin-top:14px;padding-top:10px}
+  .programme-head{margin-bottom:8px}
+  .seance-marquee{aspect-ratio:16/5}
+  .seance-meta{padding:7px 11px}
+  .seance-count{font-size:12px}
+  .seance-best{font-size:11px}
+}
+
+@media (prefers-reduced-motion:reduce){
+  .seance,.seance-palettes img{transition:border-color .18s ease,opacity .18s ease}
+  .seance:hover,.seance:focus-visible,.seance:active{transform:none}
+  .seance:hover .seance-palettes img,.seance:focus-visible .seance-palettes img{transform:none}
+}

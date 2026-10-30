@@ -1,0 +1,41 @@
+# Dépendances et build
+node_modules/
+dist/
+vite.config.js.timestamp-*
+
+# Système et éditeurs
+.DS_Store
+.fuse_hidden*
+.vscode/
+.idea/
+*.swp
+
+# Journaux, caches et sauvegardes
+*.log
+npm-debug.log*
+.cache/
+__pycache__/
+*.bak
+*.old
+*.tmp
+
+# Outils et configurations propres au poste
+.claude/
+.impeccable/
+tools/
+
+# Ateliers locaux (import de films, maquettes) — jamais dans le dépôt
+import-color-of-cinema/
+salle-palace/
+fauteuils-parallax/
+onboarding-mockup.html
+public/mockup/
+
+# Secrets et configuration locale — ne jamais committer
+.env
+.env.*
+!.env.example
+.vercel/
+*.pem
+*.key
+*.p12

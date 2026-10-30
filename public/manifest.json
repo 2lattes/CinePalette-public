@@ -1,0 +1,18 @@
+{
+  "id": "/",
+  "name": "CinéPalette",
+  "short_name": "CinéPalette",
+  "description": "Devine le film par ses couleurs",
+  "lang": "fr",
+  "start_url": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#150408",
+  "theme_color": "#150408",
+  "icons": [
+    { "src": "brand-assets/app-icon/appicon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "brand-assets/app-icon/appicon-256.png", "sizes": "256x256", "type": "image/png" },
+    { "src": "brand-assets/app-icon/appicon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "brand-assets/app-icon/appicon-512-maskable.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

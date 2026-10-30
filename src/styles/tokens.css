@@ -1,0 +1,27 @@
+/* Design tokens — single source of truth for color, type, radii, motion */
+/* Self-hosted fonts (SIL OFL 1.1, see assets/fonts/OFL-*.txt), latin subset.
+   Inter is variable: one file covers weights 400–700. */
+@font-face{
+  font-family:'Bebas Neue';font-style:normal;font-weight:400;font-display:swap;
+  src:url('../assets/fonts/bebas-neue-latin.woff2') format('woff2');
+}
+@font-face{
+  font-family:'Inter';font-style:normal;font-weight:400 700;font-display:swap;
+  src:url('../assets/fonts/inter-latin.woff2') format('woff2');
+}
+:root{
+  --bg-deep:#0d0306; --bg-base:#150408; --bg-red:#2a070e;
+  --surface:rgba(255,255,255,.06); --surface-hi:rgba(255,255,255,.1);
+  --glass-red:rgba(225,29,72,.13);
+  --border:rgba(255,255,255,.12); --border-hi:rgba(255,120,150,.32);
+  --fg:#F7EDEF; --muted:#CFAEB6;
+  --accent:#E11D48; --accent-2:#FB7185; --accent-glow:rgba(225,29,72,.45);
+  --gold:#F4C542;
+  --good:#34D399; --bad:#F43F5E;
+  --radius:18px;
+  --ease:cubic-bezier(.16,1,.3,1);
+  --blur:blur(18px) saturate(160%);
+  --font-d:'Bebas Neue',sans-serif;
+  --font-h:'Inter',system-ui,sans-serif;
+  --font-b:'Inter',system-ui,sans-serif;
+}

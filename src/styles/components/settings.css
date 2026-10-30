@@ -1,0 +1,126 @@
+/* Settings: difficulty and timer, reachable from every screen.
+   Native <dialog> on purpose — focus trapping, Escape and inertness come for
+   free, and a hand-rolled modal would only get them wrong. */
+.settings-btn{cursor:pointer;color:var(--muted);transition:color .15s,border-color .15s}
+.settings-btn:hover,.settings-btn:focus-visible{color:var(--fg);border-color:var(--border-hi)}
+.settings-btn:focus-visible{outline:2px solid var(--accent-2);outline-offset:2px}
+.settings-btn .icn{width:1.15em;height:1.15em}
+
+.settings{
+  /* A native dialog centres itself through the UA's `margin:auto`. The app's
+     reset zeroes margins on everything, so it has to be said again here or the
+     panel pins itself to the top-left corner. */
+  position:fixed;inset:0;margin:auto;
+  width:min(420px,calc(100vw - 32px));padding:0;border:1px solid var(--border-hi);
+  border-radius:var(--radius);background:var(--bg-red);color:var(--fg);
+  box-shadow:0 28px 80px rgba(0,0,0,.55);
+  opacity:0;transform:scale(.97);
+  transition:opacity .18s var(--ease),transform .18s var(--ease),
+             overlay .18s allow-discrete,display .18s allow-discrete;
+}
+.settings[open]{opacity:1;transform:scale(1)}
+@starting-style{.settings[open]{opacity:0;transform:scale(.97)}}
+.settings::backdrop{background:rgba(6,2,4,.66);backdrop-filter:blur(5px);-webkit-backdrop-filter:blur(5px)}
+
+.settings-form{display:flex;flex-direction:column;gap:22px;padding:20px 22px 24px}
+.settings-head{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.settings-head h2{font-family:var(--font-d);font-weight:400;font-size:26px;letter-spacing:1.4px;line-height:1}
+.settings-close{
+  display:grid;place-items:center;width:34px;height:34px;padding:0;
+  border:1px solid var(--border);border-radius:10px;background:var(--surface);
+  color:var(--muted);cursor:pointer;transition:color .15s,border-color .15s;
+}
+.settings-close:hover,.settings-close:focus-visible{color:var(--fg);border-color:var(--border-hi)}
+.settings-close:focus-visible{outline:2px solid var(--accent-2);outline-offset:2px}
+.settings-close .icn{width:15px;height:15px}
+
+.settings-group{border:0;padding:0;margin:0;min-width:0}
+.settings-group legend{
+  padding:0;font-family:var(--font-h);font-size:11px;font-weight:700;
+  letter-spacing:.9px;text-transform:uppercase;color:var(--muted);
+}
+.settings-note{margin:5px 0 11px;font-size:12px;color:var(--muted);line-height:1.4}
+
+.settings-levels{display:grid;gap:7px}
+.settings-level{
+  display:grid;grid-template-columns:1fr auto;align-items:baseline;gap:4px 12px;
+  padding:11px 13px;border:1px solid var(--border);border-radius:12px;
+  background:var(--surface);cursor:pointer;min-height:44px;
+  transition:border-color .15s,background .15s;
+}
+.settings-level input{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
+.settings-level .sl-name{font-family:var(--font-h);font-weight:600;font-size:15px}
+.settings-level .sl-sub{grid-column:1/-1;font-size:11.5px;color:var(--muted);line-height:1.3}
+.settings-level .sl-mark{
+  width:16px;height:16px;border-radius:50%;border:1.5px solid var(--border-hi);
+  display:grid;place-items:center;
+}
+.settings-level .sl-mark::after{
+  content:"";width:8px;height:8px;border-radius:50%;background:var(--accent-2);
+  transform:scale(0);transition:transform .15s var(--ease);
+}
+.settings-level:hover{border-color:var(--border-hi);background:var(--glass-red)}
+.settings-level:has(input:checked){border-color:var(--accent-2);background:var(--glass-red)}
+.settings-level:has(input:checked) .sl-mark::after{transform:scale(1)}
+.settings-level:has(input:focus-visible){outline:2px solid var(--accent-2);outline-offset:2px}
+
+.settings-switch{
+  display:grid;grid-template-columns:1fr auto;align-items:center;gap:3px 14px;
+  padding:11px 13px;border:1px solid var(--border);border-radius:12px;
+  background:var(--surface);cursor:pointer;min-height:44px;
+  transition:border-color .15s,background .15s;
+}
+/* Placed explicitly: left to auto-placement the track landed in the first
+   column and pushed the label to the right. */
+.settings-switch b{grid-area:1/1}
+.settings-switch small{grid-area:2/1}
+.settings-switch .ss-track{grid-area:1/2/3/3;justify-self:end}
+.settings-switch input{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
+.settings-switch b{font-family:var(--font-h);font-weight:600;font-size:15px}
+.settings-switch small{font-size:11.5px;color:var(--muted);line-height:1.3}
+.settings-switch .ss-track{
+  width:40px;height:23px;border-radius:999px;
+  background:rgba(255,255,255,.1);border:1px solid var(--border);
+  display:flex;align-items:center;padding:2px;transition:background .18s ease,border-color .18s ease;
+}
+.settings-switch .ss-track i{
+  width:17px;height:17px;border-radius:50%;background:var(--muted);
+  transition:transform .18s var(--ease),background .18s ease;
+}
+.settings-switch:hover{border-color:var(--border-hi)}
+.settings-switch:has(input:checked){border-color:var(--accent-2);background:var(--glass-red)}
+.settings-switch:has(input:checked) .ss-track{background:var(--accent);border-color:var(--accent)}
+.settings-switch:has(input:checked) .ss-track i{transform:translateX(17px);background:#fff}
+.settings-switch:has(input:focus-visible){outline:2px solid var(--accent-2);outline-offset:2px}
+
+/* Discreet on purpose: replaying the intro is a rare need, not a setting. */
+.settings-replay{
+  align-self:flex-start;margin-top:-10px;padding:6px 0;border:0;background:none;
+  color:var(--muted);font:inherit;font-size:12px;cursor:pointer;
+  text-decoration:underline;text-underline-offset:3px;
+}
+.settings-replay:hover{color:var(--fg)}
+.settings-replay:focus-visible{outline:2px solid var(--accent-2);outline-offset:2px;border-radius:4px}
+
+
+/* End screen: change your mind while the score is still on screen. */
+.end-replay{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:8px 10px;margin-top:16px;padding-top:14px;border-top:1px solid var(--border)}
+.end-replay-label{font-size:12px;color:var(--muted)}
+.end-levels{display:flex;gap:6px;flex-wrap:wrap;justify-content:center}
+.end-level,.end-relaxed{
+  padding:7px 12px;border:1px solid var(--border);border-radius:999px;
+  background:var(--surface);color:var(--muted);font:600 12px var(--font-h);
+  cursor:pointer;min-height:34px;transition:color .15s,border-color .15s,background .15s;
+}
+.end-level:hover,.end-relaxed:hover,
+.end-level:focus-visible,.end-relaxed:focus-visible{color:var(--fg);border-color:var(--border-hi)}
+.end-level[aria-pressed="true"]{color:var(--fg);border-color:var(--accent-2);background:var(--glass-red)}
+.end-relaxed[aria-pressed="true"]{color:var(--gold);border-color:rgba(244,197,66,.34)}
+.end-level:focus-visible,.end-relaxed:focus-visible{outline:2px solid var(--accent-2);outline-offset:2px}
+
+@media (prefers-reduced-motion:reduce){
+  .settings{transition:opacity .12s linear,overlay .12s allow-discrete,display .12s allow-discrete;transform:none}
+  .settings[open]{transform:none}
+  @starting-style{.settings[open]{transform:none}}
+  .settings-level .sl-mark::after,.settings-switch .ss-track i{transition:none}
+}
